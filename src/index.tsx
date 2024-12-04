@@ -2,14 +2,28 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import GeneradQuestionList from './views/GeneratedQuestionList';
+import WarningsPage from './views/WarningsPage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={createTheme()}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/question-list" element={<GeneradQuestionList />} />
+          <Route path="/warning" element={<WarningsPage />} />
+        </Routes>
+      </BrowserRouter>
+
+    </ThemeProvider>
   </React.StrictMode>
 );
 
