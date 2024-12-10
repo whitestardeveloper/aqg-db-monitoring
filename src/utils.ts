@@ -1,10 +1,23 @@
+//old firebase config
+// export const firebaseConfig = {
+//     authDomain: "automatic-question-creato.firebaseapp.com",
+//     databaseURL: "https://automatic-question-creator-default-rtdb.firebaseio.com",
+//     projectId: "automatic-question-creator",
+//     storageBucket: "automatic-question-creator.appspot.com",
+//   };
+
+
 export const firebaseConfig = {
-    authDomain: "automatic-question-creato.firebaseapp.com",
-    databaseURL: "https://automatic-question-creator-default-rtdb.firebaseio.com",
-    projectId: "automatic-question-creator",
-    storageBucket: "automatic-question-creator.appspot.com",
-  };
-  
+    // apiKey: "AIzaSyATw0PlVfKjuI8SqGEXLJwXS0R1Q8q-ZdI",
+    authDomain: "auto-question-gen.firebaseapp.com",
+    databaseURL: "https://auto-question-gen-default-rtdb.firebaseio.com",
+    projectId: "auto-question-gen",
+    storageBucket: "auto-question-gen.firebasestorage.app",
+    // messagingSenderId: "706229399348",
+    // appId: "1:706229399348:web:8d911de7af89bcc248ff61",
+    // measurementId: "G-HNZFDT3C7H"
+};
+
 
 export const warningTexts = [
     'metinde bahse',

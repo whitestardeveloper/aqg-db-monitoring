@@ -7,7 +7,7 @@ import { get, getDatabase } from "firebase/database";
 import { ref, onValue, set, orderByChild, query, limitToFirst, startAt } from "firebase/database";
 import { orderBy, limit, where } from "firebase/firestore";
 import DataMigration from './components/DataMigration';
-import { isWarningIncludes } from './utils';
+import { firebaseConfig, isWarningIncludes } from './utils';
 
 
 
@@ -25,18 +25,18 @@ import { isWarningIncludes } from './utils';
 
 
 
-var firebaseConfig = {
-  // apiKey: "API_KEY",
-  authDomain: "automatic-question-creato.firebaseapp.com",
-  // The value of `databaseURL` depends on the location of the database
-  databaseURL: "https://automatic-question-creator-default-rtdb.firebaseio.com",
-  projectId: "automatic-question-creator",
-  storageBucket: "automatic-question-creator.appspot.com",
-  // messagingSenderId: "SENDER_ID",
-  // appId: "APP_ID",
-  // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
-  // measurementId: "G-MEASUREMENT_ID",
-};
+// var firebaseConfig = {
+//   // apiKey: "API_KEY",
+//   authDomain: "automatic-question-creato.firebaseapp.com",
+//   // The value of `databaseURL` depends on the location of the database
+//   databaseURL: "https://automatic-question-creator-default-rtdb.firebaseio.com",
+//   projectId: "automatic-question-creator",
+//   storageBucket: "automatic-question-creator.appspot.com",
+//   // messagingSenderId: "SENDER_ID",
+//   // appId: "APP_ID",
+//   // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
+//   // measurementId: "G-MEASUREMENT_ID",
+// };
 
 
 // Firebase uygulamasını başlatın

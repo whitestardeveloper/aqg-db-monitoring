@@ -20,6 +20,7 @@ import AddReviewerDialog from './components/AddReviewerDialog';
 import QuestionSourceDialog from './components/QuestionSourceDialog';
 import ReviewerForm from './components/ReviewerForm';
 import ReviewerCard from './components/ReviewerCard';
+import QuestionCard from './components/QuestionCard';
 
 type DataTableProps = {
   questionList: any[];
@@ -42,6 +43,38 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
     setOpenedQuestionIds(newOpenedQuestionIds);
   };
 
+
+  const getJsonArrayQuestion = (questionRawList: any) => {
+    // Eğer questionRawList zaten bir dizi ya da nesne ise, string'e dönüştürmeye gerek yok
+    console.log(typeof questionRawList);
+
+    // Eğer questionRawList bir stringse, onu işleyelim
+    if (typeof questionRawList === "string") {
+      // Gereksiz ` ```json ` ve ` ``` ` gibi karakterleri temizleyelim
+      questionRawList = questionRawList.replace(/```json|```/g, '');
+    }
+
+    // Eğer verimiz hala string'teyse, False/True'yu işleyelim
+    let cleanedData = questionRawList.replace(/False/g, 'false').replace(/True/g, 'true');
+
+    try {
+      // JSON.parse işlemi ile geçerli bir JSON nesnesine dönüştürme
+      let parsedJson = JSON.parse(cleanedData);
+
+      // parsedJson'ın türünü kontrol et
+      console.log(typeof parsedJson);
+      console.log(JSON.stringify(parsedJson))
+
+      // Eğer parsedJson bir dizi ise döndürelim, yoksa boş dizi dönelim
+      return Array.isArray(parsedJson) ? parsedJson : [];
+    } catch (error) {
+      console.error("JSON.parse hata:", error);
+      return []; // JSON.parse hatası varsa boş dizi döndürelim
+    }
+  };
+
+  // console.log(questionList);
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -63,7 +96,7 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
                   {openedQuestionIds.findIndex(i => i === index) > - 1 ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
               </TableCell>
-              <TableCell>{x?.index}</TableCell>
+              <TableCell>{`${index} => ${x?.index}`}</TableCell>
               <TableCell>
                 {x?.source_info?.class} -  {x?.source_info?.course} -  {x?.source_info?.category}
               </TableCell>
@@ -88,9 +121,17 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
                     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
                       <Box sx={{ border: '2px solid #eee', borderRadius: 8, p: 2, flex: 1, minWidth: 600 }}>
                         <Typography variant="h6" color="#dece85">Üretilen Soru</Typography>
-                        <MarkdownPreview source={x?.data?.generated_text} style={{ padding: 16 }} />
+                        {/* <MarkdownPreview source={JSON.stringify(x?.data?.generated_questions, null, 4)} style={{ padding: 16 }} /> */}
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                          {getJsonArrayQuestion(x?.data?.generated_questions).map((q: any, qIndex: number) =>
+                            <QuestionCard
+                              questionType={x?.questions_info?.question_type}
+                              question={q}
+                              questionIndex={qIndex + 1}
+                            />
+                          )}
+                        </Box>
                       </Box>
-
 
                       <Box sx={{ border: '2px solid #eee', borderRadius: 8, p: 2, flex: 1 }}>
                         <Typography variant="h6" color="#dece85">Değerlendirmeler</Typography>

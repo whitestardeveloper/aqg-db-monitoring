@@ -17,13 +17,11 @@ const database = getDatabase(app);
 const dbRef = ref(database, 'generated-question-list');
 const dbQuery = query(dbRef, orderByChild('index'), startAt(1), limitToFirst(7560));
 
-
 const allSourcesDataRef = ref(database, 'question-gen-sources');
 
 const TAKE_ITEM_COUNT = 25;
 
 function GeneradQuestionList() {
-
   const [items, setItems] = useState([]);
   const [allSourcesData, setAllSourcesData] = useState([]);
   const [page, setPage] = useState(1);

@@ -183,7 +183,7 @@ export default function Filters({  }: FiltersProps) {
 
 export const q_types = ["Çoktan Seçmeli", "Doğru Yanlış", "Boşluk doldurma", "Açık Soru", "Eşleştirme", "Kısa Cevaplı"]
 export const q_diff_levels = ['kolay', 'orta', 'zor']
-export const models = ["GOOGLE (gemini-1.5-flash)", "GOOGLE (gemma2)", "MISTRAL (mistral-nemo)", "META (llama3.1)", "ALIBABA (qwen2.5)", "NVIDIA (nvidia/nemotron-4-340b-instruct)", "Cohere For AI (aya-expanse)[8B]"]
+export const models = ["GOOGLE (gemini-1.5-flash)", "GOOGLE (gemma2)", "MISTRAL (mistral-nemo)", "META (llama3.1) [70b]", "ALIBABA (qwen2.5)", "NVIDIA (nvidia/nemotron-4-340b-instruct)", "Cohere For AI (aya-expanse)[8B]"]
 export const student_class = ['5. sınıf', '6. sınıf', '7. sınıf', '8. sınıf']
 export const courses = ['Türkçe', 'Sosyal Bilgiler', 'Fen Bilimleri']
 export const categories: any = {
