@@ -21,6 +21,7 @@ import QuestionSourceDialog from './components/QuestionSourceDialog';
 import ReviewerForm from './components/ReviewerForm';
 import ReviewerCard from './components/ReviewerCard';
 import QuestionCard from './components/QuestionCard';
+import ReviewerDetail from './components/ReviewerDetail';
 
 type DataTableProps = {
   questionList: any[];
@@ -29,10 +30,12 @@ type DataTableProps = {
 
 export default function DataTable({ questionList, allSourcesData }: DataTableProps) {
   const [openedQuestionIds, setOpenedQuestionIds] = React.useState<number[]>([]);
+  const [showedReviewerQuestionIds, setshowedReviewerQuestionIds] = React.useState<number[]>([]);
+
   const [openQuestionSourceDialog, setOpenQuestionSourceDialog] = React.useState(false);
   const [openReviewDialogKey, setOpenReviewDialogKey] = React.useState('');
 
-  const handleRowClick = (index: number) => {
+  const handleOpenQuestion = (index: number) => {
     const clickedId = index;
     const newOpenedQuestionIds = [...openedQuestionIds];
     if (!newOpenedQuestionIds.includes(clickedId)) {
@@ -41,6 +44,17 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
       newOpenedQuestionIds.splice(newOpenedQuestionIds.indexOf(clickedId), 1);
     }
     setOpenedQuestionIds(newOpenedQuestionIds);
+  };
+
+  const handleOpenReviwer = (index: number) => {
+    const clickedId = index;
+    const newOpenedReviewerQuestionIds = [...showedReviewerQuestionIds];
+    if (!newOpenedReviewerQuestionIds.includes(clickedId)) {
+      newOpenedReviewerQuestionIds.push(clickedId);
+    } else {
+      newOpenedReviewerQuestionIds.splice(newOpenedReviewerQuestionIds.indexOf(clickedId), 1);
+    }
+    setshowedReviewerQuestionIds(newOpenedReviewerQuestionIds);
   };
 
 
@@ -92,11 +106,11 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
           <TableBody>
             <TableRow>
               <TableCell>
-                <IconButton aria-label="expand row" size="small" onClick={() => handleRowClick(index)}>
+                <IconButton aria-label="expand row" size="small" onClick={() => handleOpenQuestion(index)}>
                   {openedQuestionIds.findIndex(i => i === index) > - 1 ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
               </TableCell>
-              <TableCell>{`${index} => ${x?.index}`}</TableCell>
+              <TableCell>{x?.index}</TableCell>
               <TableCell>
                 {x?.source_info?.class} -  {x?.source_info?.course} -  {x?.source_info?.category}
               </TableCell>
@@ -121,8 +135,8 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
                     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
                       <Box sx={{ border: '2px solid #eee', borderRadius: 8, p: 2, flex: 1, minWidth: 600 }}>
                         <Typography variant="h6" color="#dece85">Üretilen Soru</Typography>
-                        {/* <MarkdownPreview source={JSON.stringify(x?.data?.generated_questions, null, 4)} style={{ padding: 16 }} /> */}
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <MarkdownPreview source={JSON.stringify(x?.data?.generated_questions, null, 4)} style={{ padding: 16 }} />
+                        {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                           {getJsonArrayQuestion(x?.data?.generated_questions).map((q: any, qIndex: number) =>
                             <QuestionCard
                               questionType={x?.questions_info?.question_type}
@@ -130,16 +144,19 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
                               questionIndex={qIndex + 1}
                             />
                           )}
-                        </Box>
+                        </Box> */}
                       </Box>
 
                       <Box sx={{ border: '2px solid #eee', borderRadius: 8, p: 2, flex: 1 }}>
                         <Typography variant="h6" color="#dece85">Değerlendirmeler</Typography>
                         {x?.review && Array.isArray(x?.review) ? (
                           x?.review?.map((r: any) => (
-                            <ReviewerCard reviwer={r} />
+                            showedReviewerQuestionIds.findIndex(i => i === index) > - 1 ? (
+                              <ReviewerCard reviwer={r} onShowDetail={() => handleOpenReviwer(index)} />
+                            ) : (
+                              <ReviewerDetail reviwer={r} onCloseDetail={() => handleOpenReviwer(index)} />
+                            )
                           ))
-
                         ) : (
                           openReviewDialogKey === x.key && <Typography color="#008ecefe" mt={2}>Hiç değerlendirme Eklenmedi !</Typography>
                         )}

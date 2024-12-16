@@ -6,7 +6,8 @@ import '../App.css';
 import Filters from '../Filters';
 import { useLocation } from 'react-router-dom';
 import { Pagination, Stack } from '@mui/material';
-import { firebaseConfig } from '../utils';
+import { firebaseConfig, getJsonArrayFromRaw } from '../utils';
+const dJSON = require('dirty-json');
 
 
 // Firebase uygulamasını başlatın
@@ -54,11 +55,50 @@ function GeneradQuestionList() {
     ));
 
 
-    console.log(vals)
+    // console.log(vals)
     setPage(1)
     setItems(vals)
 
   }, [loc.search])
+
+
+  const getJsonArrayQuestion = (questionRawList: any) => {
+    // Eğer questionRawList zaten bir dizi ya da nesne ise, string'e dönüştürmeye gerek yok
+    // console.log(typeof questionRawList);
+
+    // Eğer questionRawList bir stringse, onu işleyelim
+    if (typeof questionRawList === "string") {
+      // Gereksiz ` ```json ` ve ` ``` ` gibi karakterleri temizleyelim
+      questionRawList = questionRawList
+        .replace(/```json|```/g, '') // ```json ve ``` gibi kod bloklarını temizle
+        .replace(/\n/g, '') // Satır sonu karakterlerini temizle
+        .replace(/\r/g, '') // Windows carriage return'leri temizle
+        .replace(/False/g, 'false') // Python tarzı False'u JS false'a çevir
+        .replace(/True/g, 'true') // Python tarzı True'u JS true'a çevir
+        .replace(/,(\s*[\]}])/g, '$1'); // Fazladan virgül varsa, temizle (örnek: "[1, 2,]" -> "[1, 2]")
+    }
+
+    // Eğer verimiz hala string'teyse, False/True'yu işleyelim
+    let cleanedData = questionRawList.replace(/False/g, 'false').replace(/True/g, 'true');
+
+    try {
+      // JSON.parse işlemi ile geçerli bir JSON nesnesine dönüştürme
+
+      // let parsedJson = dJSON.parse(cleanedData); ## with json-parse package
+      let parsedJson = JSON.parse(cleanedData);
+
+
+      // parsedJson'ın türünü kontrol et
+      // console.log(typeof parsedJson);
+      // console.log(JSON.stringify(parsedJson))
+
+      // Eğer parsedJson bir dizi ise döndürelim, yoksa boş dizi dönelim
+      return Array.isArray(parsedJson) ? parsedJson : [];
+    } catch (error) {
+      // console.error("JSON.parse hata:", error);
+      return []; // JSON.parse hatası varsa boş dizi döndürelim
+    }
+  };
 
 
   useEffect(() => {
@@ -83,18 +123,38 @@ function GeneradQuestionList() {
     onValue(dbQuery, (snapshot) => {
       const data = snapshot.val();
       let arr_updated: any[] = [];
+      let q_list: any[] = [];
+
+
+      let error_json_array_ids: string[] = [];
 
       Object.entries(data).forEach(([key, item]: [string, any]) => {
         arr_updated.push({ ...item, key: key })
+
+        const arr = getJsonArrayQuestion(item?.data?.generated_questions);
+        if (arr.length === 0) {
+          error_json_array_ids.push(key)
+        } else {
+          q_list = q_list.concat(arr)
+        }
+        // q_list.push()
       });
 
       if (data !== null) {
+
+        console.log(q_list.length)
+        console.log(error_json_array_ids.length)
+        console.log(error_json_array_ids)
+
+
         let vals = arr_updated;
         vals = vals.sort((prev: any, next: any) => prev.index - next.index)
+        vals = vals.filter(v => error_json_array_ids.findIndex((e: any) => e === v.key) > -1)
         setItems(vals as any);
       }
     });
   }, []);
+
 
 
   return (

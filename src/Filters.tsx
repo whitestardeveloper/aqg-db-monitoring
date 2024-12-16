@@ -8,10 +8,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 
 type FiltersProps = {
- 
+
 }
 
-export default function Filters({  }: FiltersProps) {
+export default function Filters({ }: FiltersProps) {
   const loc = useLocation();
   const qs = new URLSearchParams(loc.search);
   const nav = useNavigate();
@@ -59,11 +59,11 @@ export default function Filters({  }: FiltersProps) {
     }
 
     nav(`/question-list?${filterParams}`, { replace: true });
-    
+
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', p: 1 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', p: 1, flexWrap: 'wrap' }}>
       <Box sx={{ border: '1px solid #edc', borderRadius: 1.5 }}>
         <FormControl sx={{ m: 1, minWidth: 150 }} size="small">
           <InputLabel id="q-type-label">Sınıf</InputLabel>
@@ -118,9 +118,7 @@ export default function Filters({  }: FiltersProps) {
             ))}
           </Select>
         </FormControl>
-
       </Box>
-
 
       <FormControl sx={{ m: 1, minWidth: 150 }} size="small">
         <InputLabel id="q-type-label">Soru Tipi</InputLabel>
@@ -176,14 +174,13 @@ export default function Filters({  }: FiltersProps) {
       <Button variant="contained" sx={{ borderRadius: 12, textDecoration: 'none', ml: 'auto' }} onClick={applyFilters}>
         Filtreleri Uygula
       </Button>
-
     </Box>
   )
 }
 
 export const q_types = ["Çoktan Seçmeli", "Doğru Yanlış", "Boşluk doldurma", "Açık Soru", "Eşleştirme", "Kısa Cevaplı"]
 export const q_diff_levels = ['kolay', 'orta', 'zor']
-export const models = ["GOOGLE (gemini-1.5-flash)", "GOOGLE (gemma2)", "MISTRAL (mistral-nemo)", "META (llama3.1) [70b]", "ALIBABA (qwen2.5)", "NVIDIA (nvidia/nemotron-4-340b-instruct)", "Cohere For AI (aya-expanse)[8B]"]
+export const models = ["GOOGLE (gemini-1.5-flash)", "GOOGLE (gemma2) [27b]", "MISTRAL (mistral-small) [22b]", "META (llama3.1) [70b]", "ALIBABA (qwen2.5) [32b]", "Cohere For AI (aya-expanse)[32b]", "NVIDIA (nvidia/nemotron-4-340b-instruct)"]
 export const student_class = ['5. sınıf', '6. sınıf', '7. sınıf', '8. sınıf']
 export const courses = ['Türkçe', 'Sosyal Bilgiler', 'Fen Bilimleri']
 export const categories: any = {

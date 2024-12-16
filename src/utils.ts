@@ -54,3 +54,41 @@ export const isWarningIncludes = (generatedText: string) => {
 
 
 
+
+
+export const getJsonArrayFromRaw = (rawContent: any) => {
+    // Eğer rawContent zaten bir dizi ya da nesne ise, string'e dönüştürmeye gerek yok
+    if (typeof rawContent === "string") {
+        rawContent = rawContent.replace(/```json|```/g, '');
+    }
+
+    let cleanedData = rawContent.replace(/False/g, 'false').replace(/True/g, 'true');
+
+    try {
+        // JSON.parse işlemi ile geçerli bir JSON nesnesine dönüştürme
+        let parsedJson = JSON.parse(cleanedData);
+        return Array.isArray(parsedJson) ? parsedJson : [];
+    } catch (error) {
+        console.error("JSON.parse hata:", error);
+        return []; // JSON.parse hatası varsa boş dizi döndürelim
+    }
+};
+
+
+export const getJsonObjectFromRaw = (rawContent: any) => {
+    // Eğer rawContent zaten bir dizi ya da nesne ise, string'e dönüştürmeye gerek yok
+    if (typeof rawContent === "string") {
+        rawContent = rawContent.replace(/```json|```/g, '');
+    }
+
+    let cleanedData = rawContent.replace(/False/g, 'false').replace(/True/g, 'true');
+
+    try {
+        // JSON.parse işlemi ile geçerli bir JSON nesnesine dönüştürme
+        let parsedJson = JSON.parse(cleanedData);
+        return typeof parsedJson === 'object' && parsedJson !== null ? parsedJson : {} as any;
+    } catch (error) {
+        console.error("JSON.parse hata:", error);
+        return {} as any; // JSON.parse hatası varsa boş dizi döndürelim
+    }
+};
