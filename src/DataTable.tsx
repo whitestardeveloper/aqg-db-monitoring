@@ -149,7 +149,8 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
 
                       <Box sx={{ border: '2px solid #eee', borderRadius: 8, p: 2, flex: 1 }}>
                         <Typography variant="h6" color="#dece85">Değerlendirmeler</Typography>
-                        {x?.review && Array.isArray(x?.review) ? (
+                        <MarkdownPreview source={JSON.stringify(x?.review[0]?.question_rates, null, 4)} style={{ padding: 16 }} />
+                        {/* {x?.review && Array.isArray(x?.review) ? (
                           x?.review?.map((r: any) => (
                             showedReviewerQuestionIds.findIndex(i => i === index) > - 1 ? (
                               <ReviewerCard reviwer={r} onShowDetail={() => handleOpenReviwer(index)} />
@@ -159,7 +160,7 @@ export default function DataTable({ questionList, allSourcesData }: DataTablePro
                           ))
                         ) : (
                           openReviewDialogKey === x.key && <Typography color="#008ecefe" mt={2}>Hiç değerlendirme Eklenmedi !</Typography>
-                        )}
+                        )} */}
 
                         {openReviewDialogKey === x.key ? (
                           <ReviewerForm open={openReviewDialogKey === ''} setOpen={(open: boolean) => setOpenReviewDialogKey('')} questionKey={x?.key} reviwerList={x?.review && Array.isArray(x?.review) ? x?.review : []} />

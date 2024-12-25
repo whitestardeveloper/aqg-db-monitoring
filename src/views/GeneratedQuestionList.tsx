@@ -101,6 +101,36 @@ function GeneradQuestionList() {
   };
 
 
+
+  const getJsonArrayReview = (questionRawList: any) => {
+    // Eğer questionRawList zaten bir dizi ya da nesne ise, string'e dönüştürmeye gerek yok
+    // console.log(typeof questionRawList);
+
+    // Eğer questionRawList bir stringse, onu işleyelim
+    if (typeof questionRawList === "string") {
+      // Gereksiz ` ```json ` ve ` ``` ` gibi karakterleri temizleyelim
+      questionRawList = questionRawList
+        .replace(/```json|```/g, '') // ```json ve ``` gibi kod bloklarını temizle
+        .replace(/\n/g, '') // Satır sonu karakterlerini temizle
+        .replace(/\r/g, '') // Windows carriage return'leri temizle
+        .replace(/,(\s*[\]}])/g, '$1'); // Fazladan virgül varsa, temizle (örnek: "[1, 2,]" -> "[1, 2]")
+    }
+
+    try {
+      // JSON.parse işlemi ile geçerli bir JSON nesnesine dönüştürme
+      // parsedJson'ın türünü kontrol et
+      // console.log(typeof parsedJson);
+      // console.log(JSON.stringify(parsedJson))
+
+      // Eğer parsedJson bir dizi ise döndürelim, yoksa boş dizi dönelim
+      return Array.isArray(questionRawList) ? questionRawList : [];
+    } catch (error) {
+      // console.error("JSON.parse hata:", error);
+      return []; // JSON.parse hatası varsa boş dizi döndürelim
+    }
+  };
+
+
   useEffect(() => {
 
     //question sources get
@@ -132,24 +162,29 @@ function GeneradQuestionList() {
         arr_updated.push({ ...item, key: key })
 
         const arr = getJsonArrayQuestion(item?.data?.generated_questions);
-        if (arr.length === 0) {
-          error_json_array_ids.push(key)
-        } else {
+
+        if (arr.length === 3) {
           q_list = q_list.concat(arr)
         }
-        // q_list.push()
+
+        const reviewArr: any[] = item.review && item.review.length > 0 && item.review[0].question_rates ? getJsonArrayReview(item?.review[0].question_rates) : [];
+        console.log(reviewArr)
+
+        // console.log(reviewArr)
+        if (reviewArr.length !== 3){
+          error_json_array_ids.push(key)
+        }
+
       });
 
       if (data !== null) {
 
-        console.log(q_list.length)
-        console.log(error_json_array_ids.length)
         console.log(error_json_array_ids)
-
+        console.log(error_json_array_ids.length)
 
         let vals = arr_updated;
         vals = vals.sort((prev: any, next: any) => prev.index - next.index)
-        vals = vals.filter(v => error_json_array_ids.findIndex((e: any) => e === v.key) > -1)
+        // vals = vals.filter(v => error_json_array_ids.findIndex((e: any) => e === v.key) > -1)
         setItems(vals as any);
       }
     });
